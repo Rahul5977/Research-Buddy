@@ -20,7 +20,7 @@ def read_root():
 
 # endpoint for uploading files
 @app.post("/porcess-documents")
-async def process_document(file:UploadFile=File(...)):
+async def process_document(background_tasks: BackgroundTasks,file:UploadFile=File(...)):
     # defines path to save file
     save_path = f"output/{file.filename}"
     os.makedirs("output",exist_ok=True)
@@ -28,8 +28,7 @@ async def process_document(file:UploadFile=File(...)):
     file_handler.save_file(file,save_path)
     
     # Running background task
-    background_tasks = BackgroundTasks()
-    background_tasks.add_task(simulate_ai_response,"user@example.com",file.filename,save_path)
+    background_tasks.add_task(simulate_ai_response,"user@example.com",save_path)
     
     return {"message": "File upload successful. Processing has started in the background."}
     
