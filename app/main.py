@@ -2,6 +2,7 @@
 from fastapi import FastAPI,UploadFile,File,BackgroundTasks
 from dotenv import load_dotenv
 from .utils import file_handler
+from . import schemas
 import os
 import time
 load_dotenv()
@@ -32,3 +33,10 @@ async def process_document(background_tasks: BackgroundTasks,file:UploadFile=Fil
     
     return {"message": "File upload successful. Processing has started in the background."}
     
+@app.post("/chat")
+async def chat(request:schemas.ChatQuery):
+    print(f"Recieved Chat Query:{request.job_id}")
+    return {
+        "job_id":request.job_id,
+        "response":request.query
+    }
