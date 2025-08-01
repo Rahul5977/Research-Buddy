@@ -3,6 +3,7 @@ from ..utils import parser
 from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from agents import summarizer
 def parse_document_node(state: GraphState)->GraphState:
     print("---NODE: Parsing Document---")
     state["parsed_data"] = parser.parse_pdf_with_grobid(state["new_document_path"])
@@ -20,4 +21,11 @@ def chunk_and_embed_node(state: GraphState)->GraphState:
     Chroma.from_texts(chunks, embedding_model, collection_name=job_id, persist_directory=vector_store_path)
     state["rag_collection_name"]=vector_store_path
     print(f"---SUCCESS: RAG knowledge base created.---")
+    return state
+
+def summary_node(state: GraphState)->GraphState:
+    print("---NODE: Creating Summary---")
+    full_text=state["parsed_data"].get("full_text","")
+    summary=summarizer.summarize_text(full_text)
+    state["summary"] = summary
     return state
