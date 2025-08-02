@@ -6,7 +6,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-def visualize_text(text:str)->str:
+def create_diagram_from_text(text:str)->str:
     "genrate flowchart, graphs from the text of the Research paper"
     if not text:
         return "No text provided"
