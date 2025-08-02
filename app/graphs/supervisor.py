@@ -50,12 +50,9 @@ workflow.add_node("citations",processing_nodes.citations)
 workflow.add_node("visualizer",processing_nodes.visualizer)
 workflow.add_node("compile_booklet",processing_nodes.compile_booklet_node)
 
-# chat nodes
-workflow.add_node("chatbot",chat_nodes.chatbot_node)
-workflow.add_node("chatbot_response",chat_nodes.chatbot_response_node)
-
-# handle errors nodes
-workflow.add_node("handle_error",error_nodes.handle_error_node)
+workflow.add_node("switch_to_chat", chat_nodes.switch_to_chat_node)
+workflow.add_node("chatbot", chat_nodes.chatbot_response_node)
+workflow.add_node("handle_error", error_nodes.handle_error_node)
 
 # edges
 workflow.set_entry_point("start_workflow")
@@ -71,12 +68,25 @@ workflow.add_conditional_edges(
         "wait_for_input": "wait_for_input"
     }
 )
+workflow.add_edge("start_processing","parse_document")
+
 
 # error handleing 
 def add_checked_edge(from_node,to_node):
     def check_error(state: GraphState)->str:
         return "handle_error" if state.get("error_message") else to_node
     return workflow.add_conditional_edges(from_node,check_error,{"handle_error":"handle_error",to_node:to_node})
+
+add_checked_edge("parse_document","chunk_and_embed")
+add_checked_edge("chunk_and_embed","summary")
+add_checked_edge("summary","citations")
+add_checked_edge("citations","visualizer")
+add_checked_edge("visualizer","compile_booklet")
+
+workflow.add_edge("compile_booklet","switch_to_chat")
+workflow.add_edge("switch_to_chat","chatbot")
+workflow.add_edge("chatbot","wait_for_input")
+workflow.add_edge("handle_error","wait_for_input")
 
 
 app=workflow.compile()
