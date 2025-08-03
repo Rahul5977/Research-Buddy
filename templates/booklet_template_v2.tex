@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs} % For better table lines
+\usepackage{longtable} % For tables that span multiple pages
+\geometry{a4paper, margin=1in}
+
+\title{AI-Generated Research Paper Analysis}
+\author{Research Assistant Agent}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Simplified Summary}
+{{ summary }}
+
+\section{Generated Citations}
+\begin{verbatim}
+{{ citations }}
+\end{verbatim}
+\newpage
+
+% Only include the Tables section if there are tables
+{% if tables %}
+\section{Extracted Tables}
+    % Loop through each table provided
+    {% for table in tables %}
+        \subsection*{Table {{ loop.index }}}
+        \begin{center}
+        % Unstructured provides tables as HTML. This is a limitation for direct LaTeX inclusion.
+        % We will display it as verbatim text. For real rendering, a html->latex converter would be needed.
+        \begin{verbatim}
+        {{ table }}
+        \end{verbatim}
+        \end{center}
+        \vspace{1cm}
+    {% endfor %}
+{% endif %}
+
+% Only include the Images section if there are images
+{% if images %}
+\section{Extracted Image Captions}
+    % Loop through each image summary/caption
+    {% for image_summary in images %}
+        \begin{itemize}
+            \item {{ image_summary }}
+        \end{itemize}
+    {% endfor %}
+{% endif %}
+
+\end{document}
