@@ -23,7 +23,7 @@ This project was developed for the Intra IIT Tech Meet at IIT Bhilai.
 
 The application uses a state-machine architecture managed by a LangGraph "supervisor." This ensures a clear separation between the document processing pipeline and the interactive chat loop, providing a smooth and predictable user experience.
 
-graph TD
+    graph TD
     subgraph "Phase 1: Document Processing Pipeline"
         A[User uploads PDF via UI/API] --> B{FastAPI Endpoint: /process_document};
         B -- Triggers --> C{LangGraph Workflow};
@@ -33,7 +33,7 @@ graph TD
         F --> G(4. Generate Citations);
         G --> H(5. Compile PDF Booklet);
         H --> I((State Updated: Chat Ready ✅));
-    end
+        end
 
     subgraph "Phase 2: Interactive Chat Loop"
         J[User asks question via UI/API] --> K{FastAPI Endpoint: /chat};
