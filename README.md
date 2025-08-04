@@ -42,9 +42,6 @@ The application uses a state-machine architecture managed by a LangGraph "superv
         M --> N((Response Sent to User));
     end
 
-    style A fill:#D5F5E3,stroke:#2ECC71
-    style J fill:#D6EAF8,stroke:#3498DB
-
 -----
 
 ## Tech Stack 🛠️
@@ -54,8 +51,8 @@ The application uses a state-machine architecture managed by a LangGraph "superv
   * **LLM Interaction:** LangChain, Google Gemini
   * **Document Parsing:** `unstructured`
   * **Vector Database:** ChromaDB
-  * **Embeddings:** Sentence-BERT (`all-MiniLM-L6-v2`)
-  * **PDF Compilation:** Jinja2, LaTeX
+  * **Embeddings:** HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+  * **PDF Compilation:** WIP
 
 -----
 
@@ -99,19 +96,7 @@ This project requires two key system-level dependencies:
 Create a `requirements.txt` file with the content below and install it.
 
 ```
-# requirements.txt
-fastapi
-uvicorn[standard]
-langchain
-langgraph
-langchain-google-genai
-"unstructured[pdf]"
-unstructured-inference
-sentence-transformers
-chromadb
-jinja2
-python-dotenv
-graphviz
+Got to requirements.txt file and copy paste
 ```
 
 ```bash
