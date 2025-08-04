@@ -23,32 +23,27 @@ This project was developed for the Intra IIT Tech Meet at IIT Bhilai.
 
 The application uses a state-machine architecture managed by a LangGraph "supervisor." This ensures a clear separation between the document processing pipeline and the interactive chat loop, providing a smooth and predictable user experience.
 
-```mermaid
 graph TD
-    subgraph User Interaction
-        A[Upload PDF] --> B{FastAPI Backend};
-        B --> C[Start Background Job];
-        D[Ask Question] --> B;
+    subgraph "Phase 1: Document Processing Pipeline"
+        A[User uploads PDF via UI/API] --> B{FastAPI Endpoint: /process_document};
+        B -- Triggers --> C{LangGraph Workflow};
+        C --> D(1. Parse Document);
+        D --> E(2. Index Content for RAG);
+        E --> F(3. Summarize Paper);
+        F --> G(4. Generate Citations);
+        G --> H(5. Compile PDF Booklet);
+        H --> I((State Updated: Chat Ready ✅));
     end
 
-    subgraph "LangGraph Workflow (Background)"
-        C --> E(Parse Document);
-        E --> F(Index for RAG);
-        F --> G(Summarize);
-        G --> H(Generate Citations);
-        H --> I(Compile PDF Booklet);
-        I --> J[Set Mode: Chat Ready];
-    end
-    
-    subgraph "Chat Loop (Foreground)"
-       B -- User Query --> K{RAG Chain};
-       K --> L[Generate Answer];
-       L --> B;
+    subgraph "Phase 2: Interactive Chat Loop"
+        J[User asks question via UI/API] --> K{FastAPI Endpoint: /chat};
+        K -- Uses RAG Index from E --> L[RAG Chain Retrieves Context];
+        L --> M[LLM Generates Answer];
+        M --> N((Response Sent to User));
     end
 
-    style User Interaction fill:#f9f,stroke:#333,stroke-width:2px
-    style "LangGraph Workflow (Background)" fill:#ccf,stroke:#333,stroke-width:2px
-```
+    style A fill:#D5F5E3,stroke:#2ECC71
+    style J fill:#D6EAF8,stroke:#3498DB
 
 -----
 
